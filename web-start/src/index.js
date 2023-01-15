@@ -99,16 +99,15 @@ async function saveMessage(messageText) {
 }
 // Loads chat messages history and listens for upcoming ones.
 function loadMessages() {
-  // TODO 8: Load and listen for new messages.
-  const recenetMessagesQuery = query(
-    collection(
-      getFirestore(),
-      "messages",
-      orderBy("timestamp", "desc"),
-      limit(30)
-    )
+  // Create the query to load the last 12 messages and listen for new ones.
+  const recentMessagesQuery = query(
+    collection(getFirestore(), "messages"),
+    orderBy("timestamp", "desc"),
+    limit(30)
   );
-  onSnapshot(recenetMessagesQuery, function (snapshot) {
+
+  // Start listening to the query.
+  onSnapshot(recentMessagesQuery, function (snapshot) {
     snapshot.docChanges().forEach(function (change) {
       if (change.type === "removed") {
         deleteMessage(change.doc.id);
